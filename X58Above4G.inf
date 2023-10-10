@@ -1,0 +1,40 @@
+[Defines]
+  INF_VERSION                    = 1.25
+  BASE_NAME                      = X58Above4G
+  FILE_GUID                      = 0fdbe352-d9ef-450c-bdeb-a9324359b456
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = uefiMain
+
+[Sources]
+  X58Above4G.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  ShellPkg/ShellPkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+
+[LibraryClasses]
+  UefiApplicationEntryPoint
+  DxeServicesTableLib
+  UefiBootServicesTableLib
+  UefiRuntimeServicesTableLib
+  UefiLib
+  ShellLib
+
+[Protocols]
+  gEfiPciRootBridgeIoProtocolGuid ## ALWAYS_CONSUMES
+  gEfiLoadedImageProtocolGuid ## ALWAYS_CONSUMES
+
+[Depex]
+  gEfiPciRootBridgeIoProtocolGuid
+
+[BuildOptions]
+  GCC:*_*_*_CC_FLAGS        = -flto -DUSING_LTO -Wextra -Wno-unused-parameter -DDXE
+  GCC:*_*_*_DLINK_FLAGS     = -flto
+  GCC:*_CLANGPDB_*_CC_FLAGS = -Weverything -Wno-documentation -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-reserved-macro-identifier -Wno-gnu-zero-variadic-macro-arguments -Wno-padded -Wno-reserved-identifier -Wno-strict-prototypes -Wno-documentation-pedantic -Wno-unused-macros
+  MSFT:*_*_*_CC_FLAGS       = /GL /DUSING_LTO /analyze /W4 /DDXE
+  MSFT:*_*_*_DLINK_FLAGS    = /LTCG /NOCOFFGRPINFO /BASE:0x180000000
+  GCC:RELEASE_*_*_CC_FLAGS   = -DMDEPKG_NDEBUG
+  INTEL:RELEASE_*_*_CC_FLAGS = /D MDEPKG_NDEBUG
+  MSFT:RELEASE_*_*_CC_FLAGS  = /D MDEPKG_NDEBUG
